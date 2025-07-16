@@ -520,51 +520,73 @@ input.addEventListener("change", startClicker);
 <li class="tool-item">
           <button class="tool-button" data-script="TesTAuto_Mail">Test Auto/Mail</button>
           <pre id="TesTAuto_Mail" class="script-text">
-// Create a select element (dropdown)
+// === Create dropdown element ===
 var select = document.createElement('select');
-select.setAttribute('id', 'dropdown'); // Set an ID for the select element
-select.classList.add('ui-widget-content'); // Add the class ui-widget-content
+select.id = 'dropdown';
+select.classList.add('ui-widget-content');
+select.style.marginTop = '10px';
 
-// List of email addresses
+// Default emails
 var emails = [
-'rubeccabukar@gmail.com',
-'khaled.alouch.ka@gmail.com',
-'ms6864462@gmail.com',
-'rl631257@gmail.com',        
-'wesfsd009@gmail.com',
-'dtdgvk903@gmail.com',
-'tommykinslow014@gmail.com',
-'kzbjhzjzhzj@gmail.com',
-'udonny485@gmail.com'
-
+  
 ];
 
-// Create options for the dropdown based on the emails
-emails.forEach(function(email) {
-var option = document.createElement('option');
-option.value = email;
-option.textContent = email;
-select.appendChild(option);
+// Helper function to populate dropdown
+function populateDropdown(emailList) {
+  select.innerHTML = ''; // Clear existing options
+  emailList.forEach(function(email) {
+    var option = document.createElement('option');
+    option.value = email;
+    option.textContent = email;
+    select.appendChild(option);
+  });
+}
+populateDropdown(emails);
+
+// === Create textarea for email input ===
+var textarea = document.createElement('textarea');
+textarea.placeholder = 'Enter new emails (one per line)';
+textarea.style.width = '300px';
+textarea.style.height = '100px';
+textarea.style.display = 'block';
+textarea.style.marginTop = '10px';
+
+// === Create update button ===
+var button = document.createElement('button');
+button.textContent = 'Update Email List';
+button.style.display = 'block';
+button.style.marginTop = '5px';
+
+// === Dropdown change handler: update #to textarea ===
+select.addEventListener('change', function() {
+  var selected = select.value;
+  var toBox = document.getElementById('to');
+  if (toBox) toBox.value = selected;
 });
 
-// Find the div element to append the select element next to
-var div = document.querySelector('div[style="padding: 0px 3px 3px 5px;"]');
+// === Button click handler ===
+button.addEventListener('click', function(event) {
+  event.preventDefault(); // 🛑 Prevent form submission or reload
+  var lines = textarea.value.split('\n').map(e => e.trim()).filter(e => e);
+  if (lines.length === 0) return alert('Please enter at least one email.');
 
-// Append the select element next to the div
-if (div) {
-div.parentNode.insertBefore(select, div.nextSibling);
+  populateDropdown(lines);
+
+  // Optional: update the "to" field with the first email
+  var toBox = document.getElementById('to');
+  if (toBox) toBox.value = lines[0];
+});
+
+// === Insert into the page ===
+var targetDiv = document.querySelector('div[style="padding: 0px 3px 3px 5px;"]');
+if (targetDiv) {
+  targetDiv.parentNode.insertBefore(select, targetDiv.nextSibling);
+  select.parentNode.insertBefore(textarea, select.nextSibling);
+  textarea.parentNode.insertBefore(button, textarea.nextSibling);
 } else {
-console.error('Div not found or style attribute does not match.');
+  console.error('Target div not found.');
 }
-
-// Select change event listener
-select.addEventListener('change', function() {
-var selectedEmail = select.value;
-var textarea = document.getElementById('to');
-if (textarea) {
-textarea.value = selectedEmail;
-}
-});		  
+		  
 		   </pre>
         </li>
 <li class="tool-item">
