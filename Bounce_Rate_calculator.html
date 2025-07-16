@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Calculator</title>
+    <link rel="icon" href="https://via.placeholder.com/16/007BFF/FFFFFF?text=R" type="image/png"> <!-- Add favicon -->
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5; /* light machi machi bg */
+    color: #333333; /* dark text for contrast */
+    margin: 20px;
+    text-align: center;
+}
+input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    background-color: #ffffff; /* white input bg */
+    border: 1px solid #ccc; /* subtle border */
+    color: #333333;
+    border-radius: 8px;
+}
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007acc; /* machi machi blue */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+button:hover {
+    background-color: #005fa3; /* slightly darker blue hover */
+}
+.output {
+    margin-top: 20px;
+    font-size: 18px;
+}
+.history {
+    margin-top: 20px;
+    text-align: left;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.history h2 {
+    text-align: center;
+    color: #555555; /* medium gray for heading */
+}
+.history ul {
+    list-style: none;
+    padding: 0;
+}
+.history li {
+    background: #ffffff; /* white background for items */
+    margin: 5px 0;
+    padding: 10px;
+    border: 1px solid #eee; /* subtle border */
+    border-radius: 8px;
+    color: #333333;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Rate Calculator</h1>
+    <p>Enter the values in the format: <strong>TotalEmails   BouncedEmails</strong></p>
+    <input type="text" id="inputValues" placeholder="e.g., 170,704   9,577">
+    <div class="button-container">
+        <button onclick="calculateRates()">Calculate</button>
+        <button onclick="clearHistory()">Clear History</button> <!-- Moved Clear History button here -->
+    </div>
+    <div class="output" id="output"></div>
+    <div class="history" id="history">
+        <h2>Calculation History (Last 10)</h2>
+        <ul id="historyList"></ul>
+    </div>
+
+    <script>
+        const history = []; // Array to store the history of calculations
+
+        function calculateRates() {
+            const input = document.getElementById('inputValues').value;
+            const numbers = input.trim().split(/\s+/); // Splits by one or more spaces
+            if (numbers.length === 2) {
+                const totalEmails = parseInt(numbers[0].replace(/,/g, ''), 10);
+                const bouncedEmails = parseInt(numbers[1].replace(/,/g, ''), 10);
+
+                if (!isNaN(totalEmails) && !isNaN(bouncedEmails)) {
+                    const deliveryRate = ((totalEmails - bouncedEmails) / totalEmails * 100).toFixed(2);
+                    const bounceRate = (bouncedEmails / totalEmails * 100).toFixed(2);
+
+                    document.getElementById('output').innerHTML = `
+                        <p><strong>Delivery Rate:</strong> ${deliveryRate}%</p>
+                        <p><strong>Bounce Rate:</strong> ${bounceRate}%</p>
+                    `;
+
+                    // Add to history
+                    addToHistory(input, deliveryRate, bounceRate);
+                } else {
+                    document.getElementById('output').innerHTML = '<p>Please enter valid numbers.</p>';
+                }
+            } else {
+                document.getElementById('output').innerHTML = '<p>Please enter exactly two numbers separated by spaces.</p>';
+            }
+        }
+
+        function addToHistory(input, deliveryRate, bounceRate) {
+            const timestamp = new Date().toLocaleString(); // Get the current date and time
+
+            // Limit history to the last 10 entries
+            if (history.length >= 10) {
+                history.shift(); // Remove the oldest entry
+            }
+
+            // Add new entry to the history
+            history.unshift({
+                input,
+                deliveryRate,
+                bounceRate,
+                timestamp
+            });
+
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = ''; // Clear the history list
+
+            // Add each history entry to the list (most recent first)
+            history.forEach(entry => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <strong>Time:</strong> ${entry.timestamp} <br>
+                    <strong>Input:</strong> ${entry.input} <br>
+                    <strong>Delivery Rate:</strong> ${entry.deliveryRate}% <br>
+                    <strong>Bounce Rate:</strong> ${entry.bounceRate}%
+                `;
+                historyList.appendChild(li);
+            });
+        }
+
+        function clearHistory() {
+            // Clear the history array and update the display
+            history.length = 0;
+            updateHistoryDisplay();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mailer Assignment</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      padding: 2em;
+      margin: 0;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    h2 {
+      color: #444;
+      margin-top: 40px;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 5px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+    select, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    textarea {
+      resize: vertical;
+      font-family: monospace;
+    }
+    button {
+      padding: 12px;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    .side-by-side {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .half {
+      flex: 1 1 48%;
+      min-width: 300px;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .card {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      flex: 1 1 300px;
+    }
+    .card h3 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .copyBtn {
+      padding: 6px 12px;
+      background-color: #007acc;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Mailer Server Assignment Tool</h1>
+
+  <h2>Step 1: Select Working Mailers</h2>
+  <label for="mailerCount">Number of Mailers</label>
+  <select id="mailerCount">
+    <option value="2">2 Mailers</option>
+    <option value="3">3 Mailers</option>
+    <option value="4">4 Mailers</option>
+  </select>
+  <div id="ownershipInputs" class="side-by-side" style="margin-top: 20px;"></div>
+
+  <h2>Step 2: Input Server List</h2>
+  <div class="side-by-side">
+    <div class="half">
+      <label for="serversInput">Paste servers with send volumes</label>
+      <textarea id="serversInput" rows="10" placeholder="Example:
+tss2095 425925
+tss2335 403307"></textarea>
+      <button id="assignBtn">Assign Servers</button>
+    </div>
+  </div>
+
+  <h2>Step 3: Assignment Results</h2>
+  <div id="results" style="display:none">
+    <div class="container" id="assignmentResult"></div>
+  </div>
+
+  <script>
+    const mailerNames = [
+      "Nouhaila El Jabbari",
+      "Mohamed Oulad Moussa",
+      "Khaoula El Mekhillar",
+      "Anas Kabil"
+    ];
+
+    const ownershipInputsDiv = document.getElementById('ownershipInputs');
+    const mailerCountSelect = document.getElementById('mailerCount');
+    const assignBtn = document.getElementById('assignBtn');
+
+    function createOwnershipInputs(count) {
+      ownershipInputsDiv.innerHTML = '';
+      for (let i = 1; i <= count; i++) {
+        const div = document.createElement('div');
+        div.classList.add('half');
+        div.innerHTML = `
+          <label>Mailer ${i} Name</label>
+          <select id="mailerName_${i}">
+            ${mailerNames.map(name => `<option value="${name}">${name}</option>`).join('')}
+          </select>
+          <label>Owned Servers</label>
+          <textarea id="mailerOwned_${i}" rows="6" placeholder="tss2095\ntss2549"></textarea>
+        `;
+        ownershipInputsDiv.appendChild(div);
+      }
+    }
+
+    mailerCountSelect.addEventListener('change', () => {
+      createOwnershipInputs(parseInt(mailerCountSelect.value));
+    });
+    createOwnershipInputs(parseInt(mailerCountSelect.value));
+
+    assignBtn.addEventListener('click', () => {
+      const serversRaw = document.getElementById('serversInput').value.trim();
+      const serverLines = serversRaw.split('\n');
+      const servers = serverLines.map(line => {
+        const [name, send] = line.trim().split(/\s+/);
+        return { name, send: Number(send.replace(/,/g, '')) };
+      }).filter(s => s.name && !isNaN(s.send));
+      servers.sort((a, b) => b.send - a.send);
+
+      const mailerCount = parseInt(mailerCountSelect.value);
+      const assignments = {}, volumes = {}, names = {}, ownership = {}, assigned = new Set();
+
+      for (let i = 1; i <= mailerCount; i++) {
+        assignments[i] = [];
+        volumes[i] = 0;
+        names[i] = document.getElementById(`mailerName_${i}`).value;
+        ownership[i] = new Set(document.getElementById(`mailerOwned_${i}`).value.split('\n').map(s => s.trim()));
+      }
+
+      servers.forEach(server => {
+        for (let i = 1; i <= mailerCount; i++) {
+          if (ownership[i].has(server.name)) {
+            assignments[i].push(server);
+            volumes[i] += server.send;
+            assigned.add(server.name);
+            return;
+          }
+        }
+      });
+
+      servers.filter(s => !assigned.has(s.name)).forEach(server => {
+        let target = Object.entries(volumes).sort((a, b) => a[1] - b[1])[0][0];
+        assignments[target].push(server);
+        volumes[target] += server.send;
+      });
+
+      const resultDiv = document.getElementById('assignmentResult');
+      resultDiv.innerHTML = '';
+
+      Object.entries(assignments)
+        .map(([id, list]) => ({
+          id,
+          name: names[id],
+          list,
+          total: list.reduce((a, s) => a + s.send, 0)
+        }))
+        .sort((a, b) => b.total - a.total)
+        .forEach(({ name, list, total }) => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          const btn = document.createElement('button');
+          btn.className = 'copyBtn';
+          btn.textContent = 'Copy';
+          btn.onclick = () => {
+            navigator.clipboard.writeText(`${name}\n${list.map(s => s.name).join('\n')}`);
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy', 1000);
+          };
+          card.innerHTML = `<h3>${name} <span>${total.toLocaleString()}</span></h3>`;
+          card.appendChild(btn);
+          const table = document.createElement('table');
+          table.innerHTML = '<thead><tr><th>Server</th><th>Send</th></tr></thead><tbody>' +
+            list.map(s => `<tr><td>${s.name}</td><td>${s.send.toLocaleString()}</td></tr>`).join('') + '</tbody>';
+          card.appendChild(table);
+          resultDiv.appendChild(card);
+        });
+
+      document.getElementById('results').style.display = 'block';
+    });
+  </script>
+</body>
+</html>

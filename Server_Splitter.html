@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Server Splitter Tool</title>
+  <link rel="icon" href="https://via.placeholder.com/16/3399FF/FFFFFF?text=O" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5; /* machi machi background */
+  color: #333333; /* dark text for readability */
+  margin: 20px;
+  padding: 0;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+  color: #555555;
+}
+
+textarea, select {
+  width: 100%;
+  background-color: #ffffff; /* white input background */
+  color: #333333;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  box-sizing: border-box;
+  resize: vertical;
+  margin-bottom: 15px;
+  min-height: 120px;
+  transition: border-color 0.3s ease;
+}
+
+select {
+  height: 38px;
+  padding: 5px 10px;
+  min-height: unset;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+textarea:focus, select:focus {
+  border-color: #007acc; /* machi machi blue */
+  outline: none;
+  background-color: #e8f0fe; /* light blue background on focus */
+}
+
+button {
+  padding: 12px 20px;
+  background-color: #007acc; /* machi machi blue */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  margin-bottom: 20px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 122, 204, 0.3);
+}
+
+button:hover {
+  background-color: #005fa3; /* machi machi hover */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 95, 163, 0.5);
+}
+
+.groups-inputs {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.group-input {
+  flex: 1;
+  min-width: 280px;
+}
+
+.groups-textareas {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.group-textarea {
+  flex: 1;
+  min-width: 280px;
+}
+
+.container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.group-box {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  flex: 1;
+  min-width: 280px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.group-box h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #555555;
+  font-weight: 700;
+}
+
+.group-box button {
+  margin-bottom: 10px;
+  width: 100%;
+  font-weight: 600;
+  box-shadow: none;
+  background-color: #007acc;
+  color: white;
+  border-radius: 8px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.group-box button:hover {
+  background-color: #005fa3;
+  transform: translateY(-1px);
+}
+
+pre {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 12px;
+  white-space: pre-wrap;
+  color: #333333;
+  height: 250px;
+  overflow-y: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  user-select: text;
+}
+
+  </style>
+</head>
+<body>
+
+  <h1>Server Splitter Tool</h1>
+
+  <label for="allServers">All Servers (one per line):</label>
+  <textarea id="allServers" placeholder="e.g. tss2095&#10;vps3048&#10;abs9767"></textarea>
+
+  <div class="groups-inputs">
+    <div class="group-input">
+      <label for="groupAName">Group A Name:</label>
+      <select id="groupAName">
+        <option value="" disabled selected>Select Name</option>
+        <option>Nouhaila El Jabbari</option>
+        <option>Mohamed Oulad Moussa</option>
+        <option>Khaoula El Mekhillar</option>
+        <option>Anas Kabil</option>
+      </select>
+    </div>
+    <div class="group-input">
+      <label for="groupBName">Group B Name:</label>
+      <select id="groupBName">
+        <option value="" disabled selected>Select Name</option>
+        <option>Nouhaila El Jabbari</option>
+        <option>Mohamed Oulad Moussa</option>
+        <option>Khaoula El Mekhillar</option>
+        <option>Anas Kabil</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="groups-textareas">
+    <div class="group-textarea">
+      <label for="groupA">Group A Specific Servers (one per line):</label>
+      <textarea id="groupA" placeholder="e.g. tss2095"></textarea>
+    </div>
+    <div class="group-textarea">
+      <label for="groupB">Group B Specific Servers (one per line):</label>
+      <textarea id="groupB" placeholder="e.g. vps4767"></textarea>
+    </div>
+  </div>
+
+  <button onclick="splitServers()">Split Servers</button>
+
+  <div class="container">
+    <div class="group-box">
+      <h3 id="titleA">Group A</h3>
+      <button onclick="copyToClipboard('outputA')">📋 Copy Group A</button>
+      <pre id="outputA"></pre>
+    </div>
+    <div class="group-box">
+      <h3 id="titleB">Group B</h3>
+      <button onclick="copyToClipboard('outputB')">📋 Copy Group B</button>
+      <pre id="outputB"></pre>
+    </div>
+  </div>
+
+  <script>
+    function splitServers() {
+      const all = document.getElementById("allServers").value.trim().split("\n").map(s => s.trim()).filter(Boolean);
+      const groupAName = document.getElementById("groupAName").value.trim();
+      const groupBName = document.getElementById("groupBName").value.trim();
+
+      if (!groupAName || !groupBName) {
+        alert("Please select names for both Group A and Group B.");
+        return;
+      }
+
+      const groupASet = new Set(document.getElementById("groupA").value.trim().split("\n").map(s => s.trim()).filter(Boolean));
+      const groupBSet = new Set(document.getElementById("groupB").value.trim().split("\n").map(s => s.trim()).filter(Boolean));
+
+      const groupA = [];
+      const groupB = [];
+
+      for (let i = 0; i < all.length; i++) {
+        const server = all[i];
+        if (groupASet.has(server)) {
+          groupA.push(server);
+        } else if (groupBSet.has(server)) {
+          groupB.push(server);
+        } else {
+          if (groupA.length <= groupB.length) {
+            groupA.push(server);
+          } else {
+            groupB.push(server);
+          }
+        }
+      }
+
+      document.getElementById("titleA").textContent = groupAName;
+      document.getElementById("titleB").textContent = groupBName;
+      document.getElementById("outputA").textContent = `${groupAName}\n` + groupA.join("\n");
+      document.getElementById("outputB").textContent = `${groupBName}\n` + groupB.join("\n");
+    }
+
+    function copyToClipboard(id) {
+      const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text);
+    }
+  </script>
+
+</body>
+</html>

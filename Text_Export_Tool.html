@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Text Export Tool</title>
+  <style>
+    * {
+      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #333333;
+      background-color: #f0f2f5;
+    }
+
+    textarea, input {
+      width: 30%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      background-color: #ffffff;
+      color: #333333;
+      border-radius: 8px;
+      transition: border-color 0.3s ease;
+    }
+
+    textarea:focus, input:focus {
+      border-color: #007acc;
+      outline: none;
+    }
+
+    button {
+      padding: 10px;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-right: 5px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+      color: #333333;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #eee;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f9fafb;
+      color: #555555;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f4f6f8;
+    }
+
+    tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+
+    #copyMessage {
+      margin-top: 10px;
+      color: #007acc;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Text Export Tool  </h2>
+
+  <input type="text" id="nameInput" placeholder="Enter name" required>
+  <input type="date" id="dateInput">
+  <input type="text" id="serverInput" placeholder="Enter server name" required>
+  
+  <textarea id="textInput" placeholder="Paste your lines here..."></textarea>
+  
+  <button onclick="downloadTextFile()">Download .txt</button>
+
+  <script>
+    // Set default date to today
+    document.getElementById('dateInput').valueAsDate = new Date();
+
+    function downloadTextFile() {
+      const name = document.getElementById('nameInput').value.trim();
+      const date = document.getElementById('dateInput').value;
+      const server = document.getElementById('serverInput').value.trim();
+      const content = document.getElementById('textInput').value;
+
+      if (!name || !server || !date || !content) {
+        alert("Please fill out all fields and paste some text.");
+        return;
+      }
+
+      const filename = `${name}_${date}_${server}.txt`;
+      const blob = new Blob([content], { type: 'text/plain' });
+      const link = document.createElement('a');
+
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    }
+  </script>
+
+</body>
+</html>

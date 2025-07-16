@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Management Tool</title>
+    <link rel="icon" href="https://via.placeholder.com/16/007BFF/FFFFFF?text=O" type="image/png">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 20px;
+    padding: 0;
+}
+
+.text-box-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.text-box-wrapper {
+    flex: 1;
+    min-width: 300px;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+textarea:focus {
+    border-color: #007acc;
+    outline: none;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007acc;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #005fa3;
+}
+
+.output-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.output-section {
+    flex: 1;
+    background: #ffffff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 10px;
+    min-width: 300px;
+    color: #333;
+}
+
+.output-section h3 {
+    margin-top: 0;
+    color: #555;
+}
+
+.count {
+    font-size: 14px;
+    margin: 5px 0;
+    color: #007acc; /* green highlight */
+}
+
+.message {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.message.success {
+    color: #007acc;
+}
+
+.message.error {
+    color: #ff4d4d;
+}
+
+    </style>
+    <script>
+        function extractServersAndIPs() {
+            const allServersText = document.getElementById("allServers").value;
+            const downServersText = document.getElementById("downServers").value;
+            const limitedServersText = document.getElementById("limitedServers").value;
+            const reservedServersText = document.getElementById("reservedServers").value;
+
+            const allServers = allServersText.split("\n").filter(line => line.trim());
+            const downServers = downServersText.split("\n").filter(line => line.trim());
+            const limitedServers = limitedServersText.split("\n").filter(line => line.trim());
+            const reservedServers = reservedServersText.split("\n").filter(line => line.trim());
+
+            const validServers = allServers.filter(server => 
+                !downServers.some(down => server.startsWith(down.split("|")[0])) &&
+                !limitedServers.some(limited => server.startsWith(limited.split("|")[0])) &&
+                !reservedServers.some(reserved => server.startsWith(reserved.split("|")[0]))
+            );
+
+            const servers = [...new Set(validServers.map(line => line.split("|")[0].trim()))];
+            const ips = validServers.map(line => line.split("|")[1]?.trim()).filter(ip => ip);
+
+            document.getElementById("extractedServers").value = servers.join("\n");
+            document.getElementById("extractedIPs").value = ips.join("\n");
+
+            document.getElementById("extractedServersCount").textContent = servers.length;
+            document.getElementById("extractedIPsCount").textContent = ips.length;
+
+            document.getElementById("validServersHidden").value = validServers.join("\n");
+
+            extractMyServer(); // trigger automatically
+        }
+
+        function extractMyServer() {
+            const validServersText = document.getElementById("validServersHidden").value;
+            const myServerText = document.getElementById("myServer").value.trim();
+
+            const validServers = validServersText.split("\n").filter(line => line.trim());
+            const myServerList = myServerText.split("\n").map(line => line.trim()).filter(line => line);
+
+            const myServers = validServers.filter(line => 
+                myServerList.some(myServer => line.split("|")[0].trim() === myServer)
+            );
+
+            const servers = [...new Set(myServers.map(line => line.split("|")[0].trim()))];
+            const ips = myServers.map(line => line.split("|")[1]?.trim()).filter(ip => ip);
+
+            document.getElementById("myServers").value = servers.join("\n");
+            document.getElementById("myIPs").value = ips.join("\n");
+
+            document.getElementById("myServersCount").textContent = servers.length;
+            document.getElementById("myIPsCount").textContent = ips.length;
+        }
+
+        function copyToClipboard(elementId, messageId) {
+            const text = document.getElementById(elementId).value;
+            navigator.clipboard.writeText(text).then(() => {
+                const messageElement = document.getElementById(messageId);
+                messageElement.textContent = "Copied to clipboard!";
+                messageElement.className = "message success";
+                setTimeout(() => messageElement.textContent = "", 2000);
+            }).catch(() => {
+                const messageElement = document.getElementById(messageId);
+                messageElement.textContent = "Failed to copy.";
+                messageElement.className = "message error";
+                setTimeout(() => messageElement.textContent = "", 2000);
+            });
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            const inputs = ["allServers", "downServers", "limitedServers", "reservedServers", "myServer"];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener("input", extractServersAndIPs);
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Server Management Tool</h1>
+
+    <div class="text-box-container">
+        <div class="text-box-wrapper">
+            <h2>All Servers</h2>
+            <textarea id="allServers" placeholder="Enter all servers with IPs here..."></textarea>
+        </div>
+
+        <div class="text-box-wrapper">
+            <h2>Down & bounced Servers</h2>
+            <textarea id="downServers" placeholder="Enter down servers with IPs here..."></textarea>
+        </div>
+
+        <div class="text-box-wrapper">
+            <h2>Limited Servers</h2>
+            <textarea id="limitedServers" placeholder="Enter limited servers with IPs here..."></textarea>
+        </div>
+
+        <div class="text-box-wrapper">
+            <h2>Reserved Servers</h2>
+            <textarea id="reservedServers" placeholder="Enter reserved servers with IPs here..."></textarea>
+        </div>
+
+        <div class="text-box-wrapper">
+            <h2>My Servers</h2>
+            <textarea id="myServer" placeholder="Enter your server names, one per line..."></textarea>
+        </div>
+    </div>
+
+    <div class="output-container">
+        <div class="output-section">
+            <h3>Extracted Servers</h3>
+            <textarea id="extractedServers" readonly></textarea>
+            <div class="count">Count: <span id="extractedServersCount">0</span></div>
+            <button onclick="copyToClipboard('extractedServers', 'extractedServersMessage')">Copy Servers</button>
+            <div id="extractedServersMessage" class="message"></div>
+        </div>
+
+        <div class="output-section">
+            <h3>Extracted IPs</h3>
+            <textarea id="extractedIPs" readonly></textarea>
+            <div class="count">Count: <span id="extractedIPsCount">0</span></div>
+            <button onclick="copyToClipboard('extractedIPs', 'extractedIPsMessage')">Copy IPs</button>
+            <div id="extractedIPsMessage" class="message"></div>
+        </div>
+
+        <div class="output-section">
+            <h3>My Servers</h3>
+            <textarea id="myServers" readonly></textarea>
+            <div class="count">Count: <span id="myServersCount">0</span></div>
+            <button onclick="copyToClipboard('myServers', 'myServersMessage')">Copy My Servers</button>
+            <div id="myServersMessage" class="message"></div>
+        </div>
+
+        <div class="output-section">
+            <h3>My IPs</h3>
+            <textarea id="myIPs" readonly></textarea>
+            <div class="count">Count: <span id="myIPsCount">0</span></div>
+            <button onclick="copyToClipboard('myIPs', 'myIPsMessage')">Copy My IPs</button>
+            <div id="myIPsMessage" class="message"></div>
+        </div>
+    </div>
+
+    <textarea id="validServersHidden" style="display:none;"></textarea>
+</body>
+</html>

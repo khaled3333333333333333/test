@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Local Tools</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      padding: 2em;
+      margin: 0;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    input[type="text"] {
+      display: block;
+      margin: 0 auto 40px auto;
+      width: 80%;
+      max-width: 600px;
+      padding: 12px 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .category {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      flex: 1 1 300px;
+      max-width: 320px;
+    }
+    .category h2 {
+      margin-top: 0;
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .tool-item {
+      margin-bottom: 12px;
+    }
+    .tool-button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      text-align: center;
+      background-color: #007acc;
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background-color 0.2s, transform 0.1s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      font-size: 16px;
+    }
+    .tool-button:hover {
+      background-color: #005fa3;
+      transform: translateY(-1px);
+    }
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+    /* Hidden script text style */
+    .script-text {
+      display: none;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 12px;
+      margin-top: 5px;
+      background: #f7f7f7;
+      padding: 8px;
+      border-radius: 6px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>My Local Tools</h1>
+  <input type="text" id="searchInput" placeholder="Search tools...">
+
+  <div class="container">
+    <div class="category">
+      <h2>📧 Email Tools</h2>
+      <ul>
+        <li class="tool-item"><a class="tool-button" href="return-paths_Maker.html" target="_blank">Return Paths Maker</a></li>
+        <li class="tool-item"><a class="tool-button" href="Bounce_Rate_calculator.html" target="_blank">Bounce Rate Calculator</a></li>
+        <li class="tool-item"><a class="tool-button" href="Total_Send_Calculator.html" target="_blank">Total Send Calculator</a></li>
+        <li class="tool-item"><a class="tool-button" href="Offer_Manager.html" target="_blank">Offer Manager</a></li>
+      </ul>
+    </div>
+
+    <div class="category">
+      <h2>🖥️ Server Tools</h2>
+      <ul>
+        <li class="tool-item"><a class="tool-button" href="Server_Manager.html" target="_blank">Server Manager</a></li>
+        <li class="tool-item"><a class="tool-button" href="Server_Splitter.html" target="_blank">Server Splitter</a></li>
+      </ul>
+    </div>
+
+    <div class="category">
+      <h2>🧰 Utilities</h2>
+      <ul>
+        <li class="tool-item"><a class="tool-button" href="List_Spliter.html" target="_blank">List Spliter</a></li>
+        <li class="tool-item"><a class="tool-button" href="Link_Opener.html" target="_blank">Link Opener</a></li>
+		<li class="tool-item"><a class="tool-button" href="Remove_List_From_List.html" target="_blank">Remove List From List</a></li>
+		<li class="tool-item"><a class="tool-button" href="Text_Export_Tool.html" target="_blank">Text Export</a></li>
+      </ul>
+    </div>
+	
+
+    <!-- New Section for Console Scripts -->
+    <div class="category">
+      <h2>🖥️ Console Scripts</h2>
+      <ul>
+        <li class="tool-item">
+          <button class="tool-button" data-script="autoCleanScript">Auto Clean</button>
+          <pre id="autoCleanScript" class="script-text">
+// === UI Elements ===
+const wrapper = document.createElement("div");
+wrapper.style.position = "fixed";
+wrapper.style.bottom = "20px";
+wrapper.style.right = "20px";
+wrapper.style.background = "#001f3f";
+wrapper.style.color = "#00bfff";
+wrapper.style.padding = "12px";
+wrapper.style.fontFamily = "monospace";
+wrapper.style.borderRadius = "10px";
+wrapper.style.zIndex = "9999";
+wrapper.style.boxShadow = "0 0 15px rgba(0, 191, 255, 0.6)";
+wrapper.style.display = "flex";
+wrapper.style.flexDirection = "column";
+wrapper.style.gap = "8px";
+
+// === Controls ===
+const controls = document.createElement("div");
+controls.style.display = "flex";
+controls.style.alignItems = "center";
+controls.style.gap = "8px";
+
+// Interval input
+const intervalInput = document.createElement("input");
+intervalInput.type = "number";
+intervalInput.min = "1";
+intervalInput.value = "10";
+intervalInput.style.width = "60px";
+intervalInput.style.padding = "5px";
+intervalInput.style.border = "1px solid #00bfff";
+intervalInput.style.borderRadius = "5px";
+intervalInput.style.background = "#002b5c";
+intervalInput.style.color = "#00bfff";
+
+// Duration input
+const durationInput = intervalInput.cloneNode();
+durationInput.value = "60";
+
+// Labels
+const intervalLabel = document.createElement("label");
+intervalLabel.textContent = "Interval (sec):";
+
+const durationLabel = document.createElement("label");
+durationLabel.textContent = "Duration (sec):";
+
+// Button
+const toggleButton = document.createElement("button");
+toggleButton.textContent = "▶ Start";
+toggleButton.style.padding = "6px 10px";
+toggleButton.style.background = "#005eff";
+toggleButton.style.color = "#fff";
+toggleButton.style.border = "none";
+toggleButton.style.borderRadius = "5px";
+toggleButton.style.cursor = "pointer";
+
+// Timer displays
+const clickTimerDisplay = document.createElement("div");
+clickTimerDisplay.textContent = "Next click in: --:--";
+const stopTimerDisplay = document.createElement("div");
+stopTimerDisplay.textContent = "Stopping in: --:--";
+clickTimerDisplay.style.fontSize = stopTimerDisplay.style.fontSize = "14px";
+
+// Assemble UI
+controls.appendChild(intervalLabel);
+controls.appendChild(intervalInput);
+controls.appendChild(durationLabel);
+controls.appendChild(durationInput);
+controls.appendChild(toggleButton);
+wrapper.appendChild(controls);
+wrapper.appendChild(clickTimerDisplay);
+wrapper.appendChild(stopTimerDisplay);
+document.body.appendChild(wrapper);
+
+// === Timer Logic ===
+let clickIntervalId, countdownIntervalId, stopTimeout;
+let intervalMs = parseInt(intervalInput.value) * 1000;
+let remainingClickTime = intervalMs;
+let remainingStopTime = parseInt(durationInput.value) * 1000;
+let running = false;
+
+const elements = document.querySelectorAll("input");
+
+// Format helper
+function format(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${String(minutes).padStart(1, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+// Update countdowns
+function updateCountdowns() {
+  remainingClickTime -= 1000;
+  remainingStopTime -= 1000;
+
+  if (remainingClickTime < 0) remainingClickTime = 0;
+  if (remainingStopTime < 0) remainingStopTime = 0;
+
+  clickTimerDisplay.textContent = `Next click in: ${format(remainingClickTime)}`;
+  stopTimerDisplay.textContent = `Stopping in: ${format(remainingStopTime)}`;
+}
+
+// Start
+function startScript() {
+  clearAll();
+
+  intervalMs = parseInt(intervalInput.value) * 1000;
+  remainingClickTime = intervalMs;
+  remainingStopTime = parseInt(durationInput.value) * 1000;
+
+  clickIntervalId = setInterval(() => {
+    if (elements[7]) elements[7].click();
+    remainingClickTime = intervalMs;
+  }, intervalMs);
+
+  countdownIntervalId = setInterval(updateCountdowns, 1000);
+
+  stopTimeout = setTimeout(() => {
+    stopScript();
+    clickTimerDisplay.textContent = "⏹ Clicks stopped";
+    stopTimerDisplay.textContent = "✅ Done!";
+  }, remainingStopTime);
+
+  toggleButton.textContent = "⏹ Stop";
+  running = true;
+}
+
+// Stop
+function stopScript() {
+  clearAll();
+  toggleButton.textContent = "▶ Start";
+  running = false;
+}
+
+// Clear all timers
+function clearAll() {
+  clearInterval(clickIntervalId);
+  clearInterval(countdownIntervalId);
+  clearTimeout(stopTimeout);
+}
+
+// Toggle on button click
+toggleButton.addEventListener("click", () => {
+  if (!running) {
+    startScript();
+  } else {
+    stopScript();
+    clickTimerDisplay.textContent = "⏹ Stopped manually";
+    stopTimerDisplay.textContent = "⌛ Waiting...";
+  }
+});
+          </pre>
+        </li>
+
+        <li class="tool-item">
+          <button class="tool-button" data-script="autoScheduleScript">Auto Schedule</button>
+          <pre id="autoScheduleScript" class="script-text">
+// === UI Elements ===
+const wrapper = document.createElement("div");
+wrapper.style.position = "fixed";
+wrapper.style.bottom = "20px";
+wrapper.style.right = "20px";
+wrapper.style.background = "#001f3f"; // dark blue background
+wrapper.style.color = "#00bfff"; // bright blue text
+wrapper.style.padding = "12px";
+wrapper.style.fontFamily = "monospace";
+wrapper.style.borderRadius = "10px";
+wrapper.style.zIndex = "9999";
+wrapper.style.boxShadow = "0 0 15px rgba(0, 191, 255, 0.6)";
+wrapper.style.display = "flex";
+wrapper.style.alignItems = "center";
+wrapper.style.gap = "10px";
+
+// Input for seconds
+const input = document.createElement("input");
+input.type = "number";
+input.min = "1";
+input.value = "10"; // default 10 seconds
+input.style.width = "60px";
+input.style.padding = "5px";
+input.style.border = "1px solid #00bfff";
+input.style.borderRadius = "5px";
+input.style.background = "#002b5c";
+input.style.color = "#00bfff";
+
+// Label
+const label = document.createElement("label");
+label.textContent = "Interval (sec): ";
+label.style.marginRight = "5px";
+
+// Timer display
+const timerDisplay = document.createElement("span");
+timerDisplay.textContent = "Next click in: --:--:--";
+
+// Assemble UI
+wrapper.appendChild(label);
+wrapper.appendChild(input);
+wrapper.appendChild(timerDisplay);
+document.body.appendChild(wrapper);
+
+// === Timer Logic ===
+let intervalMs = parseInt(input.value) * 1000;
+let remainingTime = intervalMs;
+let clickIntervalId, countdownIntervalId;
+
+// Select input elements
+const elements = document.querySelectorAll("input");
+
+// Update timer display
+function updateTimer() {
+  remainingTime -= 1000;
+  if (remainingTime < 0) remainingTime = 0;
+
+  const hours = Math.floor(remainingTime / 3600000);
+  const minutes = Math.floor((remainingTime % 3600000) / 60000);
+  const seconds = Math.floor((remainingTime % 60000) / 1000);
+
+  timerDisplay.textContent = `Next click in: ${String(hours).padStart(1, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+// Auto-click function
+function startClicker() {
+  clearInterval(clickIntervalId);
+  clearInterval(countdownIntervalId);
+  
+  intervalMs = parseInt(input.value) * 1000;
+  remainingTime = intervalMs;
+
+  clickIntervalId = setInterval(() => {
+    if (elements[8]) elements[8].click();
+    remainingTime = intervalMs;
+  }, intervalMs);
+
+  countdownIntervalId = setInterval(updateTimer, 1000);
+}
+
+// Start initially
+startClicker();
+
+// Restart when input changes
+input.addEventListener("change", startClicker);
+          </pre>
+        </li>
+
+        <li class="tool-item">
+          <button class="tool-button" data-script="autoClickScript">Auto Send</button>
+          <pre id="autoClickScript" class="script-text">
+(function () {
+  // Create container
+  const container = document.createElement('div');
+  container.style.position = 'fixed';
+  container.style.bottom = '20px';
+  container.style.right = '20px';
+  container.style.background = '#e0f0ff';
+  container.style.border = '2px solid #007BFF';
+  container.style.padding = '12px';
+  container.style.zIndex = 9999;
+  container.style.fontFamily = 'Arial, sans-serif';
+  container.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+  container.style.borderRadius = '10px';
+  container.style.color = '#003366';
+  container.style.minWidth = '250px';
+
+  // Create time input fields
+  const hourInput = document.createElement('input');
+  hourInput.type = 'number';
+  hourInput.placeholder = 'HH';
+  hourInput.style.width = '50px';
+  hourInput.style.marginRight = '5px';
+
+  const minInput = document.createElement('input');
+  minInput.type = 'number';
+  minInput.placeholder = 'MM';
+  minInput.style.width = '50px';
+  minInput.style.marginRight = '5px';
+
+  const secInput = document.createElement('input');
+  secInput.type = 'number';
+  secInput.placeholder = 'SS';
+  secInput.style.width = '50px';
+
+  [hourInput, minInput, secInput].forEach(input => {
+    input.style.padding = '4px';
+    input.style.border = '1px solid #007BFF';
+    input.style.borderRadius = '4px';
+    input.style.outline = 'none';
+  });
+
+  // Buttons
+  const startBtn = document.createElement('button');
+  startBtn.textContent = 'Start';
+  startBtn.style.marginTop = '10px';
+  startBtn.style.marginRight = '10px';
+  startBtn.style.background = '#007BFF';
+  startBtn.style.color = 'white';
+  startBtn.style.border = 'none';
+  startBtn.style.padding = '5px 10px';
+  startBtn.style.borderRadius = '4px';
+  startBtn.style.cursor = 'pointer';
+
+  const stopBtn = document.createElement('button');
+  stopBtn.textContent = 'Stop';
+  stopBtn.style.marginTop = '10px';
+  stopBtn.style.background = '#6c757d';
+  stopBtn.style.color = 'white';
+  stopBtn.style.border = 'none';
+  stopBtn.style.padding = '5px 10px';
+  stopBtn.style.borderRadius = '4px';
+  stopBtn.style.cursor = 'pointer';
+
+  // Countdown display
+  const countdown = document.createElement('div');
+  countdown.style.marginTop = '10px';
+  countdown.style.fontWeight = 'bold';
+  countdown.style.color = '#0056b3';
+
+  // Add to container
+  container.appendChild(hourInput);
+  container.appendChild(minInput);
+  container.appendChild(secInput);
+  container.appendChild(startBtn);
+  container.appendChild(stopBtn);
+  container.appendChild(countdown);
+  document.body.appendChild(container);
+
+  // Timer logic
+  let interval = null;
+  function formatTime(h, m, s) {
+    return [h, m, s].map(unit => String(unit).padStart(2, '0')).join(':');
+  }
+
+  startBtn.onclick = () => {
+    let hours = parseInt(hourInput.value) || 0;
+    let minutes = parseInt(minInput.value) || 0;
+    let seconds = parseInt(secInput.value) || 0;
+
+    let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+    if (totalSeconds <= 0) {
+      countdown.textContent = 'Enter valid time!';
+      countdown.style.color = 'red';
+      return;
+    }
+
+    countdown.style.color = '#0056b3';
+    clearInterval(interval);
+    interval = setInterval(() => {
+      if (totalSeconds <= 0) {
+        clearInterval(interval);
+        const button = document.querySelector('input.send');
+        if (button) {
+          button.click();
+          countdown.textContent = '✅ Button clicked!';
+          countdown.style.color = 'green';
+        } else {
+          countdown.textContent = '❌ Button not found!';
+          countdown.style.color = 'red';
+        }
+        return;
+      }
+
+      const h = Math.floor(totalSeconds / 3600);
+      const m = Math.floor((totalSeconds % 3600) / 60);
+      const s = totalSeconds % 60;
+      countdown.textContent = `⏳ Time left: ${formatTime(h, m, s)}`;
+      totalSeconds--;
+    }, 1000);
+  };
+
+  stopBtn.onclick = () => {
+    clearInterval(interval);
+    countdown.textContent = '⏹️ Timer stopped';
+    countdown.style.color = '#888';
+  };
+})();
+          </pre>
+        </li>
+<li class="tool-item">
+          <button class="tool-button" data-script="TesTAuto_Mail">Test Auto/Mail</button>
+          <pre id="TesTAuto_Mail" class="script-text">
+// Create a select element (dropdown)
+var select = document.createElement('select');
+select.setAttribute('id', 'dropdown'); // Set an ID for the select element
+select.classList.add('ui-widget-content'); // Add the class ui-widget-content
+
+// List of email addresses
+var emails = [
+'rubeccabukar@gmail.com',
+'khaled.alouch.ka@gmail.com',
+'ms6864462@gmail.com',
+'rl631257@gmail.com',        
+'wesfsd009@gmail.com',
+'dtdgvk903@gmail.com',
+'tommykinslow014@gmail.com',
+'kzbjhzjzhzj@gmail.com',
+'udonny485@gmail.com'
+
+];
+
+// Create options for the dropdown based on the emails
+emails.forEach(function(email) {
+var option = document.createElement('option');
+option.value = email;
+option.textContent = email;
+select.appendChild(option);
+});
+
+// Find the div element to append the select element next to
+var div = document.querySelector('div[style="padding: 0px 3px 3px 5px;"]');
+
+// Append the select element next to the div
+if (div) {
+div.parentNode.insertBefore(select, div.nextSibling);
+} else {
+console.error('Div not found or style attribute does not match.');
+}
+
+// Select change event listener
+select.addEventListener('change', function() {
+var selectedEmail = select.value;
+var textarea = document.getElementById('to');
+if (textarea) {
+textarea.value = selectedEmail;
+}
+});		  
+		   </pre>
+        </li>
+<li class="tool-item">
+          <button class="tool-button" data-script="Auto_Rps_Pause">Auto Rps Pause</button>
+          <pre id="Auto_Rps_Pause" class="script-text">
+(() => {
+  let stopFlag = false;
+
+  // 1. Create input textarea
+  const inputArea = document.createElement('textarea');
+  inputArea.id = 'tempDomList';
+  inputArea.style.position = 'fixed';
+  inputArea.style.top = '10px';
+  inputArea.style.left = '10px';
+  inputArea.style.width = '400px';
+  inputArea.style.height = '300px';
+  inputArea.placeholder = 'Paste your lines here...';
+  inputArea.style.zIndex = 9999;
+  document.body.appendChild(inputArea);
+
+  // 2. Start Button
+  const startButton = document.createElement('button');
+  startButton.textContent = 'Start Processing';
+  startButton.style.position = 'fixed';
+  startButton.style.top = '320px';
+  startButton.style.left = '10px';
+  startButton.style.zIndex = 9999;
+  startButton.style.padding = '10px';
+  startButton.style.backgroundColor = '#28a745';
+  startButton.style.color = '#fff';
+  startButton.style.border = 'none';
+  startButton.style.cursor = 'pointer';
+  startButton.style.fontSize = '14px';
+  document.body.appendChild(startButton);
+
+  // 3. Stop Button
+  const stopButton = document.createElement('button');
+  stopButton.textContent = 'Stop Processing';
+  stopButton.style.position = 'fixed';
+  stopButton.style.top = '360px';
+  stopButton.style.left = '10px';
+  stopButton.style.zIndex = 9999;
+  stopButton.style.padding = '10px';
+  stopButton.style.backgroundColor = '#dc3545';
+  stopButton.style.color = '#fff';
+  stopButton.style.border = 'none';
+  stopButton.style.cursor = 'pointer';
+  stopButton.style.fontSize = '14px';
+  document.body.appendChild(stopButton);
+
+  // 4. Stop flag control
+  stopButton.onclick = () => {
+    stopFlag = true;
+    console.log('Processing stopped by user.');
+  };
+
+  // 5. Wait for the button to be enabled again (120s timeout)
+  const waitForButtonReenable = async (button, timeout = 120000) => {
+    const start = Date.now();
+    while (button.disabled || button.classList.contains('ui-state-disabled')) {
+      if (stopFlag) throw new Error('Stopped manually.');
+      if (Date.now() - start > timeout) throw new Error('Timeout waiting for button to re-enable.');
+      await new Promise(r => setTimeout(r, 200));
+    }
+  };
+
+  // 6. Start processing
+  startButton.onclick = async () => {
+    stopFlag = false;
+
+    const lines = inputArea.value.split('\n').filter(l => l.trim() !== '');
+    if (!lines.length) return alert('Please paste some lines first.');
+
+    const chunks = [];
+    for (let i = 0; i < lines.length; i += 100) {
+      chunks.push(lines.slice(i, i + 100).join('\n'));
+    }
+
+    const targetArea = document.getElementById('otherdoms');
+    if (!targetArea) return alert('#otherdoms textarea not found!');
+
+    // Correct selector for input[type=submit] with name="Pause"
+    const button = document.querySelector('input[name="Pause"]');
+    if (!button) return alert('Target button with name="Pause" not found!');
+
+    for (let i = 0; i < chunks.length; i++) {
+      if (stopFlag) {
+        alert('Processing stopped.');
+        return;
+      }
+
+      console.log(`Processing chunk ${i + 1}/${chunks.length}...`);
+
+      // Paste lines into #otherdoms
+      targetArea.value = chunks[i];
+      targetArea.dispatchEvent(new Event('input', { bubbles: true }));
+
+      // Click the button
+      button.click();
+
+      // Wait for button to become available again
+      try {
+        await waitForButtonReenable(button);
+      } catch (err) {
+        alert(err.message);
+        return;
+      }
+    }
+
+    if (!stopFlag) alert('All chunks processed!');
+  };
+})();
+
+		   
+		   </pre>
+        </li>
+<li class="tool-item">
+          <button class="tool-button" data-script="Auto_Rps_Fill">Auto Rps Fill</button>
+          <pre id="Auto_Rps_Fill" class="script-text">
+(function () {
+  const returnPath = document.getElementById('domain_varm');
+  if (!returnPath) return;
+
+  // ✨ Modern style for returnPath
+  returnPath.style.cssText = 'padding:8px;border-radius:6px;border:1px solid #ccc;font-family:monospace;font-size:13px;line-height:1.4;background:#fff;width:100%;box-sizing:border-box;';
+
+  const wrapper = document.createElement('div');
+  wrapper.style.display = 'flex';
+  wrapper.style.gap = '20px';
+  wrapper.style.marginTop = '20px';
+
+  const parent = returnPath.parentElement;
+  parent.insertBefore(wrapper, returnPath);
+  wrapper.appendChild(returnPath);
+
+  const toolPanel = document.createElement('div');
+  toolPanel.style.display = 'flex';
+  toolPanel.style.flexDirection = 'column';
+  toolPanel.style.maxWidth = '300px';
+
+  const subBox = document.createElement('textarea');
+  subBox.placeholder = 'Subdomains (one per line)';
+  subBox.style.cssText = 'height:80px;margin-bottom:10px;padding:8px;border-radius:6px;border:1px solid #ccc;font-family:monospace;font-size:13px;resize:vertical;background:#fff;';
+
+  const domBox = document.createElement('textarea');
+  domBox.placeholder = 'Domains (one per line)';
+  domBox.style.cssText = 'height:80px;margin-bottom:10px;padding:8px;border-radius:6px;border:1px solid #ccc;font-family:monospace;font-size:13px;resize:vertical;background:#fff;';
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.innerText = 'Added';
+  btn.style.cssText = 'padding:8px 12px;border:none;border-radius:6px;background:#007BFF;color:#fff;font-weight:bold;font-size:13px;cursor:pointer;transition:background 0.3s ease;';
+  btn.onmouseover = () => btn.style.background = '#0056b3';
+  btn.onmouseout = () => btn.style.background = '#007BFF';
+
+  toolPanel.appendChild(subBox);
+  toolPanel.appendChild(domBox);
+  toolPanel.appendChild(btn);
+  wrapper.appendChild(toolPanel);
+
+  btn.onclick = function () {
+    const subs = subBox.value.trim().split('\n').map(x => x.trim()).filter(Boolean);
+    const doms = domBox.value.trim().split('\n').map(x => x.trim()).filter(Boolean);
+    if (!subs.length || !doms.length) return;
+
+    const results = [];
+    subs.forEach(sub => {
+      doms.forEach(dom => {
+        results.push(`${sub}.${dom}`);
+      });
+    });
+
+    // 🔄 Replace textarea content instead of appending
+    returnPath.value = results.join('\n');
+  };
+})();
+
+		   
+		   </pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Search filter for tools
+    document.getElementById('searchInput').addEventListener('input', function () {
+      const filter = this.value.toLowerCase();
+      document.querySelectorAll('.tool-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(filter) ? '' : 'none';
+      });
+    });
+
+    // Copy script on button click with color change
+    document.querySelectorAll('.tool-button[data-script]').forEach(button => {
+      button.addEventListener('click', () => {
+        const scriptId = button.getAttribute('data-script');
+        const scriptText = document.getElementById(scriptId).textContent.trim();
+        navigator.clipboard.writeText(scriptText).then(() => {
+          const originalColor = button.style.backgroundColor;
+          button.style.backgroundColor = 'green';
+          setTimeout(() => {
+            button.style.backgroundColor = originalColor || '#007acc';
+          }, 2000);
+        }).catch(() => {
+          alert('Failed to copy!');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
