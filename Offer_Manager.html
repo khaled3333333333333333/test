@@ -1,461 +1,421 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Offer Manager</title>
-<style>
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
-    padding: 2em;
-    margin: 0;
-  }
-  h1 {
-    color: #333;
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  .offer {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    margin-bottom: 15px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
-  td {
-    padding: 8px;
-    vertical-align: top;
-  }
-  strong {
-    color: #444;
-  }
-  button {
-    padding: 12px;
-    background-color: #007acc;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    margin: 10px 5px 5px 0;
-  }
-  button:hover {
-    background-color: #005fa3;
-  }
-  #addOfferForm {
-    display: none;
-    margin-bottom: 20px;
-  }
-  label {
-    font-weight: bold;
-    display: block;
-    margin: 8px 0 3px;
-  }
-  input[type=text], textarea {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    box-sizing: border-box;
-  }
-  textarea {
-    resize: vertical;
-    font-family: monospace;
-  }
-  #searchBar {
-    margin-bottom: 20px;
-    padding: 12px;
-    width: 100%;
-    box-sizing: border-box;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-  }
-  #toggleAddOffer {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    cursor: pointer;
-    color: #007acc;
-  }
-  #linkModal, #creativeModal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border: 2px solid #666;
-    padding: 20px;
-    max-width: 600px;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    border-radius: 12px;
-  }
-  #overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right:0; bottom: 0;
-    background: rgba(0,0,0,0.3);
-    z-index: 900;
-  }
-  #toast {
-    visibility: hidden;
-    min-width: 200px;
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    border-radius: 2px;
-    padding: 12px;
-    position: fixed;
-    z-index: 1100;
-    left: 50%;
-    bottom: 30px;
-    transform: translateX(-50%);
-  }
-  #toast.show {
-    visibility: visible;
-    animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  }
-  @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-  @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
-  .copyText {
-    cursor: pointer;
-    color: #007acc;
-    text-decoration: underline;
-  }
-  #linkForm label {
-    margin-top: 10px;
-  }
-  #linkForm input[type=text] {
-    margin-bottom: 10px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Offer Manager</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #eef2f7;
+      padding: 30px;
+      margin: 0;
+    }
+    h1 { text-align: center; color: #1e3a5f; margin-bottom: 30px; }
+    #searchBar {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    button {
+      background-color: #007acc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      margin: 8px 6px 0 0;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+    button:hover { background-color: #005fa3; }
+    #toggleAddOffer {
+      font-size: 18px;
+      font-weight: bold;
+      color: #007acc;
+      cursor: pointer;
+      margin: 20px 0 10px;
+      display: inline-block;
+    }
+    #addOfferForm {
+      display: none;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 600;
+      color: #333;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    textarea {
+      resize: vertical;
+      font-family: monospace;
+    }
+    .offer {
+      background: white;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .offer table { width: 100%; }
+    .offer td { padding: 6px 4px; vertical-align: top; }
+    .offer strong { color: #1e3a5f; }
+    .copyText {
+      cursor: pointer;
+      color: #007acc;
+      text-decoration: underline;
+      display: inline-block;
+      margin-bottom: 4px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      user-select: all;
+    }
+    .copyText:hover {
+      background-color: #d0e7ff;
+    }
+    #creativeModal, #linkModal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 1000;
+    }
+    #toast {
+      visibility: hidden;
+      min-width: 200px;
+      background-color: #333;
+      color: white;
+      text-align: center;
+      border-radius: 4px;
+      padding: 12px;
+      position: fixed;
+      z-index: 1100;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+    }
+    #toast.show {
+      visibility: visible;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+    @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    #linkForm label {
+      margin-top: 12px;
+      font-weight: 500;
+      color: #444;
+    }
+    #linkForm input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .btn-danger { background-color: #cc3300; }
+    .btn-danger:hover { background-color: #aa2200; }
+  </style>
 </head>
 <body>
+  <h1>Offer Manager</h1>
+  <input id="searchBar" type="text" placeholder="Search offers...">
+  <div style="margin-bottom: 20px;">
+    <button onclick="exportOffers()">Export JSON</button>
+    <button onclick="document.getElementById('importFile').click()">Import JSON</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" />
+  </div>
+  <div id="toggleAddOffer">+ Add Offer</div>
+  <div id="addOfferForm">
+    <label>Offer Name:</label><input id="offerNameInput" type="text">
+    <label>Sponsor:</label><input id="sponsorInput" type="text">
+    <label>From (one per line):</label><textarea id="fromInput" rows="4"></textarea>
+	<label>Subject (one per line):</label><textarea id="subjectInput" rows="4"></textarea>
+    <label>GEO:</label><input id="geoInput" type="text">
+    <label>Creative HTML:</label><textarea id="creativeInput" rows="6"></textarea>
+    <button id="addOfferBtn">Add Offer</button>
+  </div>
+  <div id="offersContainer"></div>
+  <div id="creativeModal"><div id="creativeModalContent"></div><button onclick="document.getElementById('creativeModal').style.display='none'; overlay.style.display='none';">Close</button></div>
+  <div id="linkModal"><form id="linkForm"></form><button id="copyLinksBtn">Copy with Replaced Links</button><button id="cancelLinksBtn">Cancel</button></div>
+  <div id="overlay"></div>
+  <div id="toast"></div>
 
-<h1>Offer Manager</h1>
+  <script>
+    const offersContainer = document.getElementById('offersContainer');
+    const overlay = document.getElementById('overlay');
+    const toast = document.getElementById('toast');
+    const linkModal = document.getElementById('linkModal');
+    const linkForm = document.getElementById('linkForm');
+    const copyLinksBtn = document.getElementById('copyLinksBtn');
+    const cancelLinksBtn = document.getElementById('cancelLinksBtn');
 
-<input id="searchBar" type="text" placeholder="Search offers by name or sponsor..." />
+    let offers = JSON.parse(localStorage.getItem('offers') || '[]');
+    let detectedLinks = [], currentCreativeHTML = '', currentOfferIndex = null;
 
-<div style="margin-bottom:20px;">
-  <button id="exportJSONBtn">Export JSON</button>
-  <button id="importJSONBtn">Import JSON</button>
-  <input type="file" id="importFileInput" accept=".json" style="display:none" />
-</div>
+    function saveOffers() {
+      localStorage.setItem('offers', JSON.stringify(offers));
+    }
 
-<div id="toggleAddOffer">+ Add Offer</div>
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).catch(() => {
+        const temp = document.createElement('textarea');
+        temp.value = text;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+      });
+    }
 
-<div id="addOfferForm">
-  <label>Offer Name:</label>
-  <input type="text" id="offerNameInput" />
-  <label>Sponsor:</label>
-  <input type="text" id="sponsorInput" />
-  <label>From:</label>
-  <input type="text" id="fromInput" />
-  <label>Subject:</label>
-  <input type="text" id="subjectInput" />
-  <label>Creative HTML:</label>
-  <textarea id="creativeInput" rows="7"></textarea>
-  <button id="addOfferBtn">Add Offer</button>
-</div>
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.className = 'show';
+      setTimeout(() => toast.className = toast.className.replace('show', ''), 3000);
+    }
 
-<div id="offersContainer"></div>
+    function renderOffers(filter = '') {
+      offersContainer.innerHTML = '';
+      const f = filter.toLowerCase();
+      offers.forEach((offer, index) => {
+        if (offer.name.toLowerCase().includes(f)) {
+          const div = document.createElement('div');
+          div.className = 'offer';
+          const table = document.createElement('table');
+          // Normalize from and subject arrays
+          const fromArray = Array.isArray(offer.from) ? offer.from : (offer.from ? offer.from.split('\n').map(s => s.trim()).filter(Boolean) : []);
+		  const subjectArray = Array.isArray(offer.subject) ? offer.subject : (offer.subject ? offer.subject.split('\n').map(s => s.trim()).filter(Boolean) : []);
 
-<div id="creativeModal">
-  <div id="creativeModalContent"></div>
-  <button onclick="document.getElementById('creativeModal').style.display='none'; overlay.style.display='none';">Close</button>
-</div>
-
-<div id="linkModal">
-  <form id="linkForm"></form>
-  <button id="copyLinksBtn">Copy with Replaced Links</button>
-  <button id="cancelLinksBtn">Cancel</button>
-</div>
-
-<div id="overlay"></div>
-<div id="toast"></div>
-
-<script>
-  const offersContainer = document.getElementById('offersContainer');
-  const overlay = document.getElementById('overlay');
-  const toast = document.getElementById('toast');
-  const linkModal = document.getElementById('linkModal');
-  const linkForm = document.getElementById('linkForm');
-  const copyLinksBtn = document.getElementById('copyLinksBtn');
-  const cancelLinksBtn = document.getElementById('cancelLinksBtn');
-
-  let offers = JSON.parse(localStorage.getItem('offers') || '[]');
-  
-
-  function saveOffers() {
-    localStorage.setItem('offers', JSON.stringify(offers));
-  }
-
-  function renderOffers(filter = '') {
-    offersContainer.innerHTML = '';
-    const f = filter.toLowerCase();
-    offers.forEach((offer, index) => {
-      if (
-        offer.name.toLowerCase().includes(f) ||
-        (offer.sponsor && offer.sponsor.toLowerCase().includes(f))
-      ) {
-        const div = document.createElement('div');
-        div.className = 'offer';
-
-        const table = document.createElement('table');
-        const rows = [
-          ['Offer Name:', offer.name],
-          ['Sponsor:', offer.sponsor || ''],
-          ['From:', `<span class="copyText">${offer.from}</span>`],
-          ['Subject:', `<span class="copyText">${offer.subject}</span>`]
-        ];
-        rows.forEach(([label, value]) => {
-          const tr = document.createElement('tr');
-          const td1 = document.createElement('td');
-          td1.innerHTML = `<strong>${label}</strong>`;
-          const td2 = document.createElement('td');
-          td2.innerHTML = value;
-          tr.appendChild(td1);
-          tr.appendChild(td2);
-          table.appendChild(tr);
-        });
-        div.appendChild(table);
-
-        const btnFromCopy = document.createElement('button');
-        btnFromCopy.textContent = 'Copy From';
-        btnFromCopy.onclick = () => { copyToClipboard(offer.from); showToast('From copied!'); };
-
-        const btnSubCopy = document.createElement('button');
-        btnSubCopy.textContent = 'Copy Subject';
-        btnSubCopy.onclick = () => { copyToClipboard(offer.subject); showToast('Subject copied!'); };
-
-        const btnShowCreative = document.createElement('button');
-        btnShowCreative.textContent = 'Show Creative';
-        btnShowCreative.onclick = () => {
-          document.getElementById('creativeModalContent').innerHTML = offer.creative;
-          document.getElementById('creativeModal').style.display = 'block';
-          overlay.style.display = 'block';
-        };
-
-        const btnCopyCreative = document.createElement('button');
-        btnCopyCreative.textContent = 'Copy Creative';
-        btnCopyCreative.onclick = () => { copyToClipboard(offer.creative); showToast('Creative copied!'); };
-
-        const btnEditLinks = document.createElement('button');
-        btnEditLinks.textContent = 'Edit Links & Copy';
-        btnEditLinks.onclick = () => showLinkModal(index);
-
-        const btnDelete = document.createElement('button');
-        btnDelete.textContent = 'Delete';
-        btnDelete.style.backgroundColor = '#cc3300';
-        btnDelete.onclick = () => {
-          if (confirm(`Delete offer "${offer.name}"?`)) {
-            offers.splice(index, 1);
-            saveOffers();
-            renderOffers(document.getElementById('searchBar').value);
-            showToast('Offer deleted!');
+          function createSpans(arr) {
+            return arr.map(item => `<span class='copyText'>${item}</span>`).join('<br>');
           }
-        };
 
-        div.appendChild(btnFromCopy);
-        div.appendChild(btnSubCopy);
-        div.appendChild(btnShowCreative);
-        div.appendChild(btnCopyCreative);
-        div.appendChild(btnEditLinks);
-        div.appendChild(btnDelete);
+          [['Offer Name:', offer.name],
+           ['Sponsor:', offer.sponsor || ''],
+           ['From:', createSpans(fromArray)],
+           ['Subject:', createSpans(subjectArray)],
+           ['GEO:', `<span class='copyText'>${offer.geo || ''}</span>`]
+          ].forEach(([k, v]) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td><strong>${k}</strong></td><td>${v}</td>`;
+            table.appendChild(tr);
+          });
+          div.appendChild(table);
 
-        offersContainer.appendChild(div);
-      }
-    });
-  }
+          // Add button controls
+          [
+            {text:'Copy From', action: () => { copyToClipboard(fromArray.join('\n')); showToast('Copied From all!'); }},
+            {text:'Copy Subject', action: () => { copyToClipboard(subjectArray.join('\n')); showToast('Copied Subject all!'); }},
+            {text:'Copy GEO', action: () => { copyToClipboard(offer.geo || ''); showToast('Copied GEO!'); }},
+            {text:'Show Creative', action: () => {
+              document.getElementById('creativeModalContent').innerHTML = offer.creative;
+              document.getElementById('creativeModal').style.display = 'block';
+              overlay.style.display = 'block';
+            }},
+            {text:'Copy Creative', action: () => { copyToClipboard(offer.creative); showToast('Copied Creative!'); }},
+            {text:'Edit Links & Copy', action: () => showLinkModal(index)},
+            {text:'Delete', action: () => {
+              if (confirm('Delete?')) {
+                offers.splice(index, 1);
+                saveOffers();
+                renderOffers();
+              }
+            }, className:'btn-danger'}
+          ].forEach(({text, action, className}) => {
+            const btn = document.createElement('button');
+            btn.textContent = text;
+            if (className) btn.className = className;
+            btn.onclick = action;
+            div.appendChild(btn);
+          });
 
-  function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
-
-  let detectedLinks = [];
-  let currentCreativeHTML = '';
-  let currentOfferIndex = null;
-
-  function showLinkModal(offerIndex) {
-    currentOfferIndex = offerIndex;
-    const offer = offers[offerIndex];
-    currentCreativeHTML = offer.creative;
-
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(offer.creative, 'text/html');
-    const links = doc.querySelectorAll('a[href]');
-
-    const uniqueLinksMap = new Map();
-    links.forEach(link => {
-      if (!uniqueLinksMap.has(link.href)) {
-        uniqueLinksMap.set(link.href, { original: link.href, replacement: '' });
-      }
-    });
-    detectedLinks = Array.from(uniqueLinksMap.values());
-
-    if (detectedLinks.length === 0) {
-      alert('No links found in creative.');
-      return;
-    }
-
-    linkForm.innerHTML = '';
-    detectedLinks.forEach((link, idx) => {
-      const label = document.createElement('label');
-      label.textContent = `Replace link: ${link.original}`;
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.value = link.replacement;
-      input.placeholder = 'New URL';
-      input.style.width = '100%';
-      input.oninput = (e) => {
-        detectedLinks[idx].replacement = e.target.value;
-      };
-      linkForm.appendChild(label);
-      linkForm.appendChild(input);
-    });
-
-    linkModal.style.display = 'block';
-    overlay.style.display = 'block';
-  }
-
-  copyLinksBtn.onclick = () => {
-    if (currentOfferIndex === null) return;
-    let newCreative = currentCreativeHTML;
-    detectedLinks.forEach(link => {
-      if (link.replacement) {
-        const re = new RegExp(`href=["']${escapeRegExp(link.original)}["']`, 'g');
-        newCreative = newCreative.replace(re, `href="${link.replacement}"`);
-      }
-    });
-    copyToClipboard(newCreative);
-    showToast('Creative with replaced links copied!');
-    linkModal.style.display = 'none';
-    overlay.style.display = 'none';
-  };
-
-  cancelLinksBtn.onclick = () => {
-    linkModal.style.display = 'none';
-    overlay.style.display = 'none';
-  };
-
-  function showToast(msg) {
-    toast.textContent = msg;
-    toast.className = 'show';
-    setTimeout(() => { toast.className = toast.className.replace('show', ''); }, 3000);
-  }
-
-  function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).catch(() => {
-      const tempInput = document.createElement('textarea');
-      tempInput.value = text;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      document.execCommand('copy');
-      document.body.removeChild(tempInput);
-    });
-  }
-
-  document.getElementById('toggleAddOffer').onclick = () => {
-    const form = document.getElementById('addOfferForm');
-    form.style.display = form.style.display === 'block' ? 'none' : 'block';
-  };
-
-  document.getElementById('addOfferBtn').onclick = () => {
-    const offer = {
-      name: document.getElementById('offerNameInput').value.trim(),
-      sponsor: document.getElementById('sponsorInput').value.trim(),
-      from: document.getElementById('fromInput').value.trim(),
-      subject: document.getElementById('subjectInput').value.trim(),
-      creative: document.getElementById('creativeInput').value.trim()
-    };
-    if (!offer.name || !offer.from || !offer.subject || !offer.creative) {
-      alert('Please fill all required fields.');
-      return;
-    }
-    offers.push(offer);
-    saveOffers();
-    renderOffers();
-    document.getElementById('addOfferForm').style.display = 'none';
-  };
-
-  document.getElementById('searchBar').addEventListener('input', (e) => {
-    renderOffers(e.target.value);
-  });
-
-  document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('copyText')) {
-      copyToClipboard(e.target.textContent);
-      showToast('Copied!');
-    }
-  });
-
-  // JSON Export
-  document.getElementById('exportJSONBtn').onclick = () => {
-    const dataStr = JSON.stringify(offers, null, 2);
-    const blob = new Blob([dataStr], {type: "application/json"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'offers.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showToast('Exported offers as JSON!');
-  };
-
-  // JSON Import
-  const importFileInput = document.getElementById('importFileInput');
-  document.getElementById('importJSONBtn').onclick = () => {
-    importFileInput.value = null;
-    importFileInput.click();
-  };
-
-  importFileInput.onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const importedOffers = JSON.parse(reader.result);
-        if (!Array.isArray(importedOffers)) throw 'Invalid format';
-        let added = 0;
-        importedOffers.forEach(io => {
-          if (io.name && !offers.some(o => o.name === io.name)) {
-            offers.push(io);
-            added++;
-          }
-        });
-        if (added) {
-          saveOffers();
-          renderOffers(document.getElementById('searchBar').value);
-          showToast(`Imported ${added} offers!`);
-        } else {
-          alert('No new offers to import (duplicates ignored).');
+          offersContainer.appendChild(div);
         }
-      } catch (err) {
-        alert('Failed to import JSON: ' + err);
-      }
+      });
+
+      // Add click listeners to individual .copyText spans
+      document.querySelectorAll('.copyText').forEach(span => {
+        span.onclick = () => {
+          copyToClipboard(span.textContent);
+          showToast('Copied: ' + span.textContent);
+        };
+      });
+    }
+
+    function showLinkModal(i) {
+      currentOfferIndex = i;
+      const offer = offers[i];
+      currentCreativeHTML = offer.creative;
+      const doc = new DOMParser().parseFromString(offer.creative, 'text/html');
+      const links = doc.querySelectorAll('a[href]');
+      const map = new Map();
+      links.forEach(a => {
+        const href = a.getAttribute('href');
+        if (href && !map.has(href)) map.set(href, { original: href, replacement: '' });
+      });
+      detectedLinks = Array.from(map.values());
+      if (!detectedLinks.length) return alert('No links.');
+      linkForm.innerHTML = '';
+      detectedLinks.forEach((l, i) => {
+        const label = document.createElement('label');
+        label.textContent = `Replace link: ${l.original}`;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = 'New URL';
+        input.oninput = e => detectedLinks[i].replacement = e.target.value;
+        linkForm.appendChild(label);
+        linkForm.appendChild(input);
+      });
+      linkModal.style.display = 'block';
+      overlay.style.display = 'block';
+    }
+
+    copyLinksBtn.onclick = () => {
+      if (currentOfferIndex === null) return;
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(currentCreativeHTML, 'text/html');
+      const links = doc.querySelectorAll('a[href]');
+      links.forEach(link => {
+        const originalHref = link.getAttribute('href');
+        const replacement = detectedLinks.find(l => l.original === originalHref)?.replacement;
+        if (replacement) {
+          link.setAttribute('href', replacement);
+        }
+      });
+      const updatedHTML = doc.body.innerHTML;
+      copyToClipboard(updatedHTML);
+      showToast('Copied with links!');
+      linkModal.style.display = 'none';
+      overlay.style.display = 'none';
     };
-    reader.readAsText(file);
-  };
 
-  renderOffers();
+    cancelLinksBtn.onclick = () => {
+      linkModal.style.display = 'none';
+      overlay.style.display = 'none';
+    };
 
-</script>
+    document.getElementById('toggleAddOffer').onclick = () => {
+      const form = document.getElementById('addOfferForm');
+      form.style.display = form.style.display === 'block' ? 'none' : 'block';
+    };
+
+    document.getElementById('addOfferBtn').onclick = () => {
+      const offer = {
+        name: document.getElementById('offerNameInput').value.trim(),
+        sponsor: document.getElementById('sponsorInput').value.trim(),
+        from: document.getElementById('fromInput').value.trim(),
+        subject: document.getElementById('subjectInput').value.trim(),
+        geo: document.getElementById('geoInput').value.trim(),
+        creative: document.getElementById('creativeInput').value.trim()
+      };
+      if (!offer.name) {
+        alert('Offer name required');
+        return;
+      }
+      offers.push(offer);
+      saveOffers();
+      renderOffers();
+      // clear inputs
+      ['offerNameInput','sponsorInput','fromInput','subjectInput','geoInput','creativeInput'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+    };
+
+    document.getElementById('searchBar').addEventListener('input', e => {
+      renderOffers(e.target.value);
+    });
+
+    document.getElementById('importFile').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const imported = JSON.parse(ev.target.result);
+          if (!Array.isArray(imported)) throw new Error('Invalid JSON');
+          offers = imported;
+          saveOffers();
+          renderOffers();
+          showToast('Imported successfully!');
+        } catch {
+          alert('Invalid JSON file.');
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    function exportOffers() {
+      const dataStr = JSON.stringify(offers, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'offers.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    renderOffers();
+    window.addEventListener('DOMContentLoaded', async () => {
+  const githubJsonUrl = 'https://raw.githubusercontent.com/khaled3333333333333333/test/refs/heads/main/offers.json'; // <-- replace this with your real URL
+
+  try {
+    const response = await fetch(githubJsonUrl);
+    if (!response.ok) throw new Error('Network response was not ok');
+    const data = await response.json();
+    if (Array.isArray(data)) {
+      offers = data;
+      saveOffers();
+      renderOffers('');
+      showToast('Offers loaded from GitHub Pages');
+    }
+  } catch (err) {
+    const saved = localStorage.getItem('offers');
+    if (saved) {
+      offers = JSON.parse(saved);
+      renderOffers('');
+      showToast('Offers loaded from localStorage');
+    } else {
+      offers = [];
+      renderOffers('');
+    }
+  }
+});
+
+  </script>
 </body>
 </html>
